@@ -1,0 +1,107 @@
+Building a CRUD App with React and Firebase: A step by step guide
+npm install firebase
+create firebase.js in src
+copy and past config from firebase console
+add the firebase database
+copy and paste 
+  databaseURL:"https://curd--app-default-rtdb.firebaseio.com"
+inside app.jsx
+import {getDatabase} from "firebase/app"
+import {app} from "./firebase"
+const db = getDatabase(app);
+import {getDatabase,ref,set} from "firebase/app"
+
+
+
+https://www.freecodecamp.org/news/how-to-use-the-firebase-database-in-react/
+
+https://dev.to/vetswhocode/build-a-crud-firestore-app-in-react-gatsby-with-hooks-4ig9
+
+https://firebase.google.com/docs/auth/web/start#web-modular-api_1
+
+create the context folder
+inside move the firebase.jsx
+create the context
+
+
+import React, { useEffect, useState } from "react";
+import { useFirebase } from "../context/firebase";
+
+const HomePage = ({ user }) => {
+  const firebase = useFirebase();
+  const [tasks, setTasks] = useState([]);
+  const [newTask, setNewTask] = useState({ title: "", description: "" });
+
+  useEffect(() => {
+    const unsubscribe = firebase.subscribeToTasks(setTasks);
+
+    return () => unsubscribe();
+  }, [firebase]);
+
+  const handleAddTask = () => {
+    firebase.addTask(newTask.title, newTask.description);
+    setNewTask({ title: "", description: "" });
+  };
+
+  const handleDeleteTask = (taskId) => {
+    firebase.deleteTask(taskId);
+  };
+
+  return (
+    <div>
+      <div>
+        <h2>Welcome, {user.email}</h2>
+        <button
+          onClick={firebase.logoutUser}
+          className="border-2 border-black p-4"
+        >
+          Logout
+        </button>
+      </div>
+
+      <div>
+        <h3>Your Tasks</h3>
+        <ul>
+          {tasks.map((task) => (
+            <li key={task.id}>
+              {task.data.title} - {task.data.description}{" "}
+              <button onClick={() => handleDeleteTask(task.id)}>Delete</button>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div>
+        <h3>Add a New Task</h3>
+        <input
+          type="text"
+          placeholder="Task Title"
+          value={newTask.title}
+          onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Task Description"
+          value={newTask.description}
+          onChange={(e) =>
+            setNewTask({ ...newTask, description: e.target.value })
+          }
+        />
+        <button onClick={handleAddTask}>Add Task</button>
+      </div>
+    </div>
+  );
+};
+
+export default HomePage;
+
+
+
+
+npm install firebase react-bootstrap bootstrap react-router-dom
+create context
+create provider
+wrap the app component in provider
+configure firebase
+create firebase instance and initalize
+import and wrap borwserrouter to app
